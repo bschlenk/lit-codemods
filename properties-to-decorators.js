@@ -150,6 +150,8 @@ export default function transformer(file, api, options) {
         return j.typeAnnotation(j.stringTypeAnnotation());
       case 'Boolean':
         return j.typeAnnotation(j.booleanTypeAnnotation());
+      case 'Number':
+        return j.typeAnnotation(j.numberTypeAnnotation());
       case 'Array':
       case 'Object': {
         const t = j.typeAnnotation(j.stringTypeAnnotation());
