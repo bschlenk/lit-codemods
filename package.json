@@ -24,5 +24,8 @@
   "homepage": "https://github.com/bschlenk/lit-codemods#readme",
   "dependencies": {
     "jscodeshift-helper": "^1.1.0"
+  },
+  "devDependencies": {
+    "@types/jscodeshift": "^0.7.0"
   }
 }

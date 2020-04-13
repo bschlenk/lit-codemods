@@ -1,5 +1,3 @@
-import { LitElement } from 'lit-element';
-
 export class Alert extends LitElement {
   static get properties() {
     return {
@@ -12,6 +10,8 @@ export class Alert extends LitElement {
        * Documentation for closeType.
        */
       closeType: { type: String, reflect: true, attribute: 'close-type' },
+
+      arrayProp: { type: Array },
     };
   }
 
