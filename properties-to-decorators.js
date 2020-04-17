@@ -120,11 +120,6 @@ export default function transformer(file, api, options) {
   }
 
   function typeToTypeAnnotation(type) {
-    if (!type) {
-      // lit defaults `type` to String
-      type = 'String';
-    }
-
     switch (type) {
       case 'String':
         return j.typeAnnotation(j.stringTypeAnnotation());
@@ -132,15 +127,16 @@ export default function transformer(file, api, options) {
         return j.typeAnnotation(j.booleanTypeAnnotation());
       case 'Number':
         return j.typeAnnotation(j.numberTypeAnnotation());
-      case 'Array':
-      case 'Object': {
-        const t = j.typeAnnotation(j.stringTypeAnnotation());
-        // add a TODO comment since we won't be able to infer the type for
-        // arrays and objects
-        t.comments = [j.commentBlock('TODO: fix type', false, true)];
-        return t;
-      }
     }
+
+    const t =
+      type === 'Array'
+        ? j.typeAnnotation(j.arrayTypeAnnotation(j.anyTypeAnnotation()))
+        : j.typeAnnotation(j.anyTypeAnnotation());
+
+    // add a TODO comment since we can't infer the type
+    t.comments = [j.commentBlock('TODO: fix type', false, true)];
+    return t;
   }
 }
 
