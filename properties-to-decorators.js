@@ -1,27 +1,7 @@
 export default function transformer(file, api, options) {
   const j = api.jscodeshift;
 
-  j.registerMethods({
-    findConstructor() {
-      return this.find(j.MethodDefinition, { key: { name: 'constructor' } });
-    },
-
-    findStaticProperties() {
-      return this.find(j.MethodDefinition, {
-        key: { name: 'properties' },
-        static: true,
-        kind: 'get',
-      });
-    },
-
-    findThisAssignments(whitelist) {
-      return this.find(j.AssignmentExpression, {
-        left: { object: { type: 'ThisExpression' } },
-      }).filter(
-        (e) => !whitelist || whitelist.includes(e.value.left.property.name),
-      );
-    },
-  });
+  registerMethods(j);
 
   const root = j(file.source);
   let addedProperties = false;
@@ -162,4 +142,31 @@ export default function transformer(file, api, options) {
       }
     }
   }
+}
+
+let registered = false;
+function registerMethods(j) {
+  if (registered) return;
+  j.registerMethods({
+    findConstructor() {
+      return this.find(j.MethodDefinition, { key: { name: 'constructor' } });
+    },
+
+    findStaticProperties() {
+      return this.find(j.MethodDefinition, {
+        key: { name: 'properties' },
+        static: true,
+        kind: 'get',
+      });
+    },
+
+    findThisAssignments(whitelist) {
+      return this.find(j.AssignmentExpression, {
+        left: { object: { type: 'ThisExpression' } },
+      }).filter(
+        (e) => !whitelist || whitelist.includes(e.value.left.property.name),
+      );
+    },
+  });
+  registered = true;
 }
